@@ -3,34 +3,35 @@ import 'package:flutter/material.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: Text("Sportin"),
-              centerTitle: true,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Sportin"),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+            child: Column(
+          spacing: MediaQuery.of(context).size.height * 0.2,
+          children: [
+            LoginForm(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  minimumSize:
+                      Size(MediaQuery.of(context).size.width * 0.86, 40),
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  shadowColor: Colors.transparent,
+                  overlayColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(width: 2, color: Colors.green))),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              child: Text('S\'inscrire'),
             ),
-            body: Column(
-              spacing: MediaQuery.of(context).size.height * 0.5,
-              children: [
-                LoginForm(),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize:
-                          Size(MediaQuery.of(context).size.width * 0.9, 40),
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      shadowColor: Colors.transparent,
-                      overlayColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(width: 2, color: Colors.green))),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signin');
-                  },
-                  child: Text('S\'inscrire'),
-                ),
-              ],
-            )));
+          ],
+        )));
   }
 }
 
@@ -41,7 +42,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
-  String email = "";
+  String username = "";
   String password = "";
   bool _passwordVisible = true;
 
@@ -55,11 +56,11 @@ class _LoginFormState extends State<LoginForm> {
               padding: EdgeInsets.fromLTRB(40, 40, 40, 0),
               child: TextFormField(
                 cursorColor: Colors.green,
-                validator: (formEmail) {
-                  if (formEmail == null || formEmail == "") {
+                validator: (formUsername) {
+                  if (formUsername == null || formUsername == "") {
                     return 'Please enter a valid username';
                   }
-                  email = formEmail;
+                  username = formUsername;
                   return null;
                 },
                 decoration: InputDecoration(
@@ -108,6 +109,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                  minimumSize:
+                      Size(MediaQuery.of(context).size.width * 0.86, 40),
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.green,
                   shadowColor: Colors.transparent,
@@ -115,7 +118,7 @@ class _LoginFormState extends State<LoginForm> {
                       borderRadius: BorderRadius.circular(20))),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  Navigator.pushNamed(context, "/");
+                  Navigator.pushReplacementNamed(context, "/");
                 }
               },
               child: Text("Se connecter"),
