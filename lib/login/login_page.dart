@@ -23,6 +23,12 @@ class Login extends StatelessWidget {
                   )
                 ),
             LoginForm(),
+            Text("Mot de passe oublié ?",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  )
+                ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
@@ -39,6 +45,7 @@ class Login extends StatelessWidget {
               },
               child: Text('S\'inscrire', style: TextStyle(fontSize: 20)),
             ),
+            
           ],
         )));
   }
