@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
+
 class CreateProgramPage extends StatefulWidget {
   @override
   _CreateProgramPageState createState() => _CreateProgramPageState();
@@ -150,6 +152,11 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                   label: Text(objective),
                   selected: isSelected,
                   onSelected: (selected) => _toggleObjective(objective),
+                  selectedColor: vertMix, 
+                  backgroundColor: Colors.white, 
+                  labelStyle: TextStyle(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                 );
               }).toList(),
             ),
@@ -165,7 +172,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.green[200],
+                color: vertMix, 
                 borderRadius: BorderRadius.circular(8.0),
               ),
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
