@@ -134,7 +134,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             ),
             SizedBox(height: 16),
 
-
+            // Program obj
             Row(
               children: [
                 Icon(Icons.flag, color: Colors.black),
@@ -155,8 +155,14 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             ),
             SizedBox(height: 16),
 
-
-            Text("Weight Goal:"),
+            // Program Weight Goal
+            Row(
+              children: [
+                Icon(Icons.emoji_events, color: Colors.black),
+                SizedBox(width: 8),
+                Text("Weight Goal"),
+              ],
+            ),
             Container(
               decoration: BoxDecoration(
                 color: Colors.green[200],
@@ -171,6 +177,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                     onPressed: () {
                       setState(() {
                         int weight = int.tryParse(_weightController.text) ?? 75;
+                        // min weight 30
                         if (weight > 30) weight--;
                         _weightController.text = weight.toString();
                       });
@@ -194,6 +201,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                     onPressed: () {
                       setState(() {
                         int weight = int.tryParse(_weightController.text) ?? 75;
+                        // max weight 200
                         if (weight < 200) weight++;
                         _weightController.text = weight.toString();
                       });
@@ -203,7 +211,15 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               ),
             ),
             SizedBox(height: 16),
-            Text("Workouts per week:"),
+
+            // Workouts per week
+            Row(
+              children: [
+                Icon(Icons.fitness_center, color: Colors.black),
+                SizedBox(width: 8),
+                Text("Workouts per week"),
+              ],
+            ),
             Slider(
               value: _workoutsPerWeek.toDouble(),
               min: 1,
