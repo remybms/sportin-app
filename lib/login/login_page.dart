@@ -5,30 +5,39 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Sportin"),
+          title: Text("Sportin", style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  )),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
         body: SingleChildScrollView(
             child: Column(
-          spacing: MediaQuery.of(context).size.height * 0.2,
+          spacing: MediaQuery.of(context).size.height * 0.1,
           children: [
+            Text("Connexion",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                  )
+                ),
             LoginForm(),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
-                      Size(MediaQuery.of(context).size.width * 0.86, 40),
+                      Size(MediaQuery.of(context).size.width * 0.85, 50),
                   foregroundColor: Colors.black,
                   backgroundColor: Colors.white,
                   shadowColor: Colors.transparent,
-                  overlayColor: Colors.green,
+                  overlayColor: Color.fromARGB(255, 58, 165, 8),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(width: 2, color: Colors.green))),
+                      borderRadius: BorderRadius.circular(30),
+                      side: BorderSide(width: 2, color: Color.fromARGB(255, 58, 165, 8)))),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/signin');
               },
-              child: Text('S\'inscrire'),
+              child: Text('S\'inscrire', style: TextStyle(fontSize: 20)),
             ),
           ],
         )));
@@ -53,9 +62,9 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 40, 40, 0),
+              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
               child: TextFormField(
-                cursorColor: Colors.green,
+                cursorColor: Color.fromARGB(255, 58, 165, 8),
                 validator: (formUsername) {
                   if (formUsername == null || formUsername == "") {
                     return 'Please enter a valid username';
@@ -65,10 +74,10 @@ class _LoginFormState extends State<LoginForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green)),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Colors.green),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Nom d'utilisateur",
                 ),
               ),
@@ -76,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               child: TextFormField(
-                cursorColor: Colors.green,
+                cursorColor: Color.fromARGB(255, 58, 165, 8),
                 obscureText: _passwordVisible,
                 validator: (formPassword) {
                   if (formPassword == null || formPassword == "") {
@@ -87,10 +96,10 @@ class _LoginFormState extends State<LoginForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green)),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Colors.green),
+                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Mot de passe",
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -110,18 +119,18 @@ class _LoginFormState extends State<LoginForm> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
-                      Size(MediaQuery.of(context).size.width * 0.86, 40),
+                      Size(MediaQuery.of(context).size.width * 0.85, 50),
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Color.fromARGB(255, 58, 165, 8),
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20))),
+                      borderRadius: BorderRadius.circular(30))),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   Navigator.pushReplacementNamed(context, "/");
                 }
               },
-              child: Text("Se connecter"),
+              child: Text("Se connecter", style: TextStyle(fontSize: 20)),
             )
           ],
         ));
