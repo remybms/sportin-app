@@ -69,7 +69,7 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 validator: (formUsername) {
@@ -90,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 obscureText: _passwordVisible,

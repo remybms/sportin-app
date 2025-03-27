@@ -65,7 +65,7 @@ class _SigninFormState extends State<SigninForm> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 validator: (formUsername) {
@@ -86,7 +86,7 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 validator: (formEmail) {
@@ -107,7 +107,7 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 obscureText: _passwordVisible,
@@ -141,7 +141,7 @@ class _SigninFormState extends State<SigninForm> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
                 obscureText: _passwordVisible,
