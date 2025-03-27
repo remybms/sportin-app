@@ -62,8 +62,11 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            // Program Name
             Row(
               children: [
+                Icon(Icons.edit, color: Colors.grey),
                 Expanded(
                   child: TextField(
                     controller: _programNameController,
@@ -73,7 +76,6 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                     ),
                   ),
                 ),
-                Icon(Icons.edit, color: Colors.grey),
               ],
             ),
             SizedBox(height: 4),
@@ -82,24 +84,22 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 16),
-            Text("Write a comment:"),
-            TextField(
-              controller: _commentController,
-              decoration: InputDecoration(
-                hintText: "Enter your comment...",
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
+
+            // Program Duration
+            Row(
+              children: [
+                Icon(Icons.calendar_today, color: Colors.black),
+                SizedBox(width: 8),
+                Text("Program Duration"),
+              ],
             ),
-            SizedBox(height: 16),
-            Text("Select Program Duration:"),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => _selectDate(context, true),
                     child: Text(_startDate == null
-                        ? "Select Start Date"
+                        ? "Start Date"
                         : "Start: ${_dateFormat.format(_startDate!)}"),
                   ),
                 ),
@@ -108,13 +108,15 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                   child: ElevatedButton(
                     onPressed: () => _selectDate(context, false),
                     child: Text(_endDate == null
-                        ? "Select End Date"
+                        ? "End Date"
                         : "End: ${_dateFormat.format(_endDate!)}"),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 16),
+
+
             Text("Objective:"),
             Wrap(
               spacing: 8.0,
