@@ -85,6 +85,24 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             ),
             SizedBox(height: 16),
 
+            // Write comment
+            Row(
+              children: [
+                Icon(Icons.comment, color: Colors.black),
+                SizedBox(width: 8),
+                Text("Comment"),
+              ],
+            ),
+            TextField(
+              controller: _commentController,
+              decoration: InputDecoration(
+                hintText: "Enter your comment...",
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            SizedBox(height: 16),
+
             // Program Duration
             Row(
               children: [
@@ -117,7 +135,13 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             SizedBox(height: 16),
 
 
-            Text("Objective:"),
+            Row(
+              children: [
+                Icon(Icons.flag, color: Colors.black),
+                SizedBox(width: 8),
+                Text("Objective"),
+              ],
+            ),
             Wrap(
               spacing: 8.0,
               children: _objectives.map((objective) {
@@ -130,6 +154,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               }).toList(),
             ),
             SizedBox(height: 16),
+
+
             Text("Weight Goal:"),
             Container(
               decoration: BoxDecoration(
