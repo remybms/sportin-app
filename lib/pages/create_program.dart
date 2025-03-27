@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
-
+const Color vert = Color(0xFF3AA508);
 class CreateProgramPage extends StatefulWidget {
   @override
   _CreateProgramPageState createState() => _CreateProgramPageState();
@@ -114,24 +114,52 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _selectDate(context, true),
-                    child: Text(_startDate == null
+                // Start Date btn
+                ElevatedButton(
+                  onPressed: () => _selectDate(context, true),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8), 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), 
+                    ),
+                    backgroundColor: vertMix,
+                  ),
+                  child: Text(
+                    _startDate == null
                         ? "Start Date"
-                        : "Start: ${_dateFormat.format(_startDate!)}"),
+                        : "Start: ${_dateFormat.format(_startDate!)}",
+                    style: TextStyle(fontSize: 14), 
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _selectDate(context, false),
-                    child: Text(_endDate == null
+
+                // End date btn
+                ElevatedButton(
+                  onPressed: () => _selectDate(context, false),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8), 
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), 
+                    ),
+                    backgroundColor: vertMix,
+                  ),
+                  child: Text(
+                    _endDate == null
                         ? "End Date"
-                        : "End: ${_dateFormat.format(_endDate!)}"),
+                        : "End: ${_dateFormat.format(_endDate!)}",
+                    style: TextStyle(fontSize: 14),
                   ),
                 ),
+                SizedBox(width: 10),
+
+                // Program duration (Weeks)
+                if (_startDate != null && _endDate != null)
+                  Text(
+                    "${_endDate!.difference(_startDate!).inDays ~/ 7} weeks",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
               ],
             ),
             SizedBox(height: 16),
@@ -173,9 +201,9 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             Container(
               decoration: BoxDecoration(
                 color: vertMix, 
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(5),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -233,6 +261,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               max: 7,
               divisions: 6,
               label: "$_workoutsPerWeek",
+              activeColor: vert, 
+              thumbColor: vert,  
               onChanged: (double value) {
                 setState(() {
                   _workoutsPerWeek = value.toInt();
