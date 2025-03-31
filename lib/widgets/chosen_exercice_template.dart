@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChosenExerciseTemplate extends StatefulWidget {
   final String exerciseName;
-
+  
   const ChosenExerciseTemplate({required this.exerciseName, Key? key}) : super(key: key);
 
   @override

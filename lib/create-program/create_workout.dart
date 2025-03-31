@@ -14,18 +14,20 @@ class CreateWorkoutPage extends StatefulWidget {
 }
 
 class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
-  final TextEditingController _workoutNameController =
-      TextEditingController(text: "Workout Name");
-
   late List<String> workoutOptions;
   String? _selectedWorkout;
-  List<String> _selectedExercises = []; // to store the selected exercises
+  Map<String, List<String>> workoutExercises = {}; // store exercises per workout
 
   @override
   void initState() {
     super.initState();
     workoutOptions = List.generate(widget.workoutsPerWeek, (index) => "Séance ${index + 1}");
-    if (workoutOptions.isNotEmpty) _selectedWorkout = workoutOptions.first;
+    if (workoutOptions.isNotEmpty) {
+      _selectedWorkout = workoutOptions.first;
+    }
+    for (var workout in workoutOptions) {
+      workoutExercises[workout] = [];
+    }
   }
 
   void _showCreateExercisePopup(BuildContext context) {
@@ -38,7 +40,10 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
       builder: (context) => ChooseCategoryPopup(
         onExerciseSelected: (selectedExercise) {
           setState(() {
-            _selectedExercises.add(selectedExercise); // add selected exercise to list
+            if (_selectedWorkout != null) {
+              workoutExercises.putIfAbsent(_selectedWorkout!, () => []);
+              workoutExercises[_selectedWorkout!]!.add(selectedExercise);
+            }
           });
         },
       ),
@@ -57,29 +62,12 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Program name
+                  // program name
                   Text(
                     widget.programName,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Divider(thickness: 2, height: 20),
-
-                  // Workout name (editable)
-                  Row(
-                    children: [
-                      Icon(Icons.edit, color: Colors.grey),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          controller: _workoutNameController,
-                          decoration: InputDecoration(border: InputBorder.none),
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 10),
 
                   // select workout dropdown
                   Row(
@@ -97,6 +85,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedWorkout = newValue;
+                            workoutExercises.putIfAbsent(_selectedWorkout!, () => []);
                           });
                         },
                       ),
@@ -131,12 +120,21 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 10),
 
-                  // Show selected exercises
-                  Column(
-                    children: _selectedExercises.map((exercise) => ChosenExerciseTemplate(exerciseName: exercise)).toList(),
-                  ),
-
-                  SizedBox(height: 100),
+                  // dislpay selected exercises for the selected workout
+                  if (_selectedWorkout != null)
+                    SizedBox(
+                      height: 300,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: workoutExercises[_selectedWorkout!]!.length,
+                        itemBuilder: (context, index) {
+                          return ChosenExerciseTemplate(
+                            exerciseName: workoutExercises[_selectedWorkout!]![index],
+                          );
+                        },
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -148,7 +146,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
             child: CustomButton(
               text: "Save program",
               onPressed: () {
-                // todo
+                // todo, sends data to the db and then sends to "all programs" page 
               },
             ),
           ),
