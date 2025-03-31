@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportin/create-program/create_program.dart';
 import 'package:sportin/home/home_page.dart';
 import 'package:sportin/login/login_page.dart';
 import 'package:sportin/signin/signin_page.dart';
@@ -15,11 +16,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/signin',
+      initialRoute: '/login',
       routes: {
         '/': (context) => Home(),
         '/signin': (context) => Signin(),
         '/login': (context) => Login(),
+        '/create-program': (context) => CreateProgramPage(),
       },
     );
   }

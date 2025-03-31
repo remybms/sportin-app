@@ -157,9 +157,10 @@ class _LoginFormState extends State<LoginForm> {
                     final response = await apiService.loginUser(userLogin);
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString('api_token', response.token);
+                    await prefs.setInt('user_id', response.userId);
 
                     print('Token saved: ${response.token}');
-                    Navigator.pushReplacementNamed(context, "/");
+                    Navigator.pushReplacementNamed(context, "/create-program");
                   } catch (e) {
                     setState(() {
                       errorMessage =
