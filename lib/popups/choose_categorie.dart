@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
+import 'choose_exercice.dart';
 
-const Color vertMix = Color(0x99A7D992); 
+const Color vertMix = Color(0x99A7D992);
 
 class ChooseCategoryPopup extends StatelessWidget {
+  void _openChooseExercisePopup(BuildContext context, String categoryName) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => ChooseExercisePopup(categoryName: categoryName),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List<String> categories = ["Push", "Pull", "Leg"];
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       decoration: BoxDecoration(
@@ -43,17 +57,18 @@ class ChooseCategoryPopup extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Expanded(
-            child: ListView(
-              children: List.generate(
-                3,
-                (index) => Card(
+            child: ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                return Card(
                   color: Colors.white,
                   child: ListTile(
-                    title: Text("Name"),
-                    trailing: Icon(Icons.more_vert),
+                    title: Text(categories[index]),
+                    trailing: Icon(Icons.chevron_right),
+                    onTap: () => _openChooseExercisePopup(context, categories[index]),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
         ],
