@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../widgets/green-btn.dart';
 
 const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
 const Color vert = Color(0xFF3AA508);
+
 class CreateProgramPage extends StatefulWidget {
   @override
   _CreateProgramPageState createState() => _CreateProgramPageState();
 }
 
 class _CreateProgramPageState extends State<CreateProgramPage> {
-  TextEditingController _programNameController = TextEditingController(text: "Program Name");
+  TextEditingController _programNameController =
+      TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
-  TextEditingController _weightController = TextEditingController(text: "75");
+  TextEditingController _weightController =
+      TextEditingController(text: "75");
   DateTime? _startDate;
   DateTime? _endDate;
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -27,7 +31,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
   int _workoutsPerWeek = 3;
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    DateTime initialDate = isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now();
+    DateTime initialDate =
+        isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -59,218 +64,238 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Create Program")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            // Program Name
-            Row(
-              children: [
-                Icon(Icons.edit, color: Colors.grey),
-                Expanded(
-                  child: TextField(
-                    controller: _programNameController,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4),
-            Text(
-              "Last modified: 2024-03-20",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            SizedBox(height: 16),
-
-            // Write comment
-            Row(
-              children: [
-                Icon(Icons.comment, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Comment"),
-              ],
-            ),
-            TextField(
-              controller: _commentController,
-              decoration: InputDecoration(
-                hintText: "Enter your comment...",
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            SizedBox(height: 16),
-
-            // Program Duration
-            Row(
-              children: [
-                Icon(Icons.calendar_today, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Program Duration"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // Start Date btn
-                ElevatedButton(
-                  onPressed: () => _selectDate(context, true),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8), 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5), 
-                    ),
-                    backgroundColor: vertMix,
-                  ),
-                  child: Text(
-                    _startDate == null
-                        ? "Start Date"
-                        : "Start: ${_dateFormat.format(_startDate!)}",
-                    style: TextStyle(fontSize: 14), 
-                  ),
-                ),
-                SizedBox(width: 10),
-
-                // End date btn
-                ElevatedButton(
-                  onPressed: () => _selectDate(context, false),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8), 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5), 
-                    ),
-                    backgroundColor: vertMix,
-                  ),
-                  child: Text(
-                    _endDate == null
-                        ? "End Date"
-                        : "End: ${_dateFormat.format(_endDate!)}",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                SizedBox(width: 10),
-
-                // Program duration (Weeks)
-                if (_startDate != null && _endDate != null)
-                  Text(
-                    "${_endDate!.difference(_startDate!).inDays ~/ 7} weeks",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-              ],
-            ),
-            SizedBox(height: 16),
-
-            // Program obj
-            Row(
-              children: [
-                Icon(Icons.flag, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Objective"),
-              ],
-            ),
-            Wrap(
-              spacing: 8.0,
-              children: _objectives.map((objective) {
-                bool isSelected = _selectedObjectives.contains(objective);
-                return ChoiceChip(
-                  label: Text(objective),
-                  selected: isSelected,
-                  onSelected: (selected) => _toggleObjective(objective),
-                  selectedColor: vertMix, 
-                  backgroundColor: Colors.white, 
-                  labelStyle: TextStyle(
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
-
-            // Program Weight Goal
-            Row(
-              children: [
-                Icon(Icons.emoji_events, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Weight Goal"),
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: vertMix, 
-                borderRadius: BorderRadius.circular(5),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.remove, size: 20),
-                    onPressed: () {
-                      setState(() {
-                        int weight = int.tryParse(_weightController.text) ?? 75;
-                        // min weight 30
-                        if (weight > 30) weight--;
-                        _weightController.text = weight.toString();
-                      });
-                    },
+                  // Program Name
+                  Row(
+                    children: [
+                      Icon(Icons.edit, color: Colors.grey),
+                      Expanded(
+                        child: TextField(
+                          controller: _programNameController,
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                          decoration: InputDecoration(border: InputBorder.none),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 50,
-                    child: TextField(
-                      controller: _weightController,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(border: InputBorder.none),
-                      onChanged: (value) {
-                        setState(() {});
-                      },
+                  SizedBox(height: 4),
+                  Text(
+                    "Last modified: 2024-03-20",
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(height: 16),
+
+                  // Write comment
+                  Row(
+                    children: [
+                      Icon(Icons.comment, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text("Comment"),
+                    ],
+                  ),
+                  TextField(
+                    controller: _commentController,
+                    decoration: InputDecoration(
+                      hintText: "Enter your comment...",
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                  ),
+                  SizedBox(height: 16),
+
+                  // Program Duration
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text("Program Duration"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Start Date Button
+                      ElevatedButton(
+                        onPressed: () => _selectDate(context, true),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          backgroundColor: vertMix,
+                        ),
+                        child: Text(
+                          _startDate == null
+                              ? "Start Date"
+                              : "Start: ${_dateFormat.format(_startDate!)}",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+
+                      // End Date Button
+                      ElevatedButton(
+                        onPressed: () => _selectDate(context, false),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          backgroundColor: vertMix,
+                        ),
+                        child: Text(
+                          _endDate == null
+                              ? "End Date"
+                              : "End: ${_dateFormat.format(_endDate!)}",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+
+                      // Program Duration (Weeks)
+                      if (_startDate != null && _endDate != null)
+                        Text(
+                          "${_endDate!.difference(_startDate!).inDays ~/ 7} weeks",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+
+                  // Program Objectives
+                  Row(
+                    children: [
+                      Icon(Icons.flag, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text("Objective"),
+                    ],
+                  ),
+                  Wrap(
+                    spacing: 8.0,
+                    children: _objectives.map((objective) {
+                      bool isSelected =
+                          _selectedObjectives.contains(objective);
+                      return ChoiceChip(
+                        label: Text(objective),
+                        selected: isSelected,
+                        onSelected: (selected) => _toggleObjective(objective),
+                        selectedColor: vertMix,
+                        backgroundColor: Colors.white,
+                        labelStyle: TextStyle(
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
+
+                  // Weight Goal
+                  Row(
+                    children: [
+                      Icon(Icons.emoji_events, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text("Weight Goal"),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: vertMix,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.remove, size: 20),
+                          onPressed: () {
+                            setState(() {
+                              int weight =
+                                  int.tryParse(_weightController.text) ?? 75;
+                              if (weight > 30) weight--;
+                              _weightController.text = weight.toString();
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: _weightController,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(border: InputBorder.none),
+                          ),
+                        ),
+                        Text("kg"),
+                        IconButton(
+                          icon: Icon(Icons.add, size: 20),
+                          onPressed: () {
+                            setState(() {
+                              int weight =
+                                  int.tryParse(_weightController.text) ?? 75;
+                              if (weight < 200) weight++;
+                              _weightController.text = weight.toString();
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                  Text("kg"),
-                  IconButton(
-                    icon: Icon(Icons.add, size: 20),
-                    onPressed: () {
+                  SizedBox(height: 16),
+
+                  // Workouts per week
+                  Row(
+                    children: [
+                      Icon(Icons.fitness_center, color: Colors.black),
+                      SizedBox(width: 8),
+                      Text("Workouts per week"),
+                    ],
+                  ),
+                  Slider(
+                    value: _workoutsPerWeek.toDouble(),
+                    min: 1,
+                    max: 7,
+                    divisions: 6,
+                    label: "$_workoutsPerWeek",
+                    activeColor: vert,
+                    thumbColor: vert,
+                    onChanged: (double value) {
                       setState(() {
-                        int weight = int.tryParse(_weightController.text) ?? 75;
-                        // max weight 200
-                        if (weight < 200) weight++;
-                        _weightController.text = weight.toString();
+                        _workoutsPerWeek = value.toInt();
                       });
                     },
                   ),
+                  SizedBox(height: 80),
                 ],
               ),
             ),
-            SizedBox(height: 16),
+          ),
 
-            // Workouts per week
-            Row(
-              children: [
-                Icon(Icons.fitness_center, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Workouts per week"),
-              ],
-            ),
-            Slider(
-              value: _workoutsPerWeek.toDouble(),
-              min: 1,
-              max: 7,
-              divisions: 6,
-              label: "$_workoutsPerWeek",
-              activeColor: vert, 
-              thumbColor: vert,  
-              onChanged: (double value) {
-                setState(() {
-                  _workoutsPerWeek = value.toInt();
-                });
+          // Save prog btn
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: CustomButton(
+              text: "Save Program",
+              onPressed: () {
+                // to add
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
