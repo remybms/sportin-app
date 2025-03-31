@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportin/api_service.dart';
+import 'package:sportin/models/user_login_model.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Sportin", style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  )),
+          title: Text("Sportin",
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              )),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
@@ -18,17 +22,15 @@ class Login extends StatelessWidget {
           children: [
             Text("Connexion",
                 style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                )),
             LoginForm(),
             Text("Mot de passe oublié ?",
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                )),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
@@ -39,13 +41,13 @@ class Login extends StatelessWidget {
                   overlayColor: Color.fromARGB(255, 58, 165, 8),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(width: 2, color: Color.fromARGB(255, 58, 165, 8)))),
-              onPressed: () {
+                      side: BorderSide(
+                          width: 2, color: Color.fromARGB(255, 58, 165, 8)))),
+              onPressed: () async {
                 Navigator.pushReplacementNamed(context, '/signin');
               },
               child: Text('S\'inscrire', style: TextStyle(fontSize: 20)),
             ),
-            
           ],
         )));
   }
@@ -58,9 +60,10 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final formKey = GlobalKey<FormState>();
-  String username = "";
+  String email = "";
   String password = "";
-  bool _passwordVisible = true;
+  String errorMessage = "";
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +75,22 @@ class _LoginFormState extends State<LoginForm> {
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: TextFormField(
                 cursorColor: Color.fromARGB(255, 58, 165, 8),
-                validator: (formUsername) {
-                  if (formUsername == null || formUsername == "") {
-                    return 'Please enter a valid username';
+                validator: (formEmail) {
+                  if (formEmail == null || formEmail == "") {
+                    return 'Please enter a valid email';
                   }
-                  username = formUsername;
+                  email = formEmail;
                   return null;
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Nom d'utilisateur",
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  labelText: "Adresse email",
                 ),
               ),
             ),
@@ -103,10 +108,12 @@ class _LoginFormState extends State<LoginForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Mot de passe",
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -114,7 +121,7 @@ class _LoginFormState extends State<LoginForm> {
                           ? Icons.visibility_off
                           : Icons.visibility,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         _passwordVisible = !_passwordVisible;
                       });
@@ -123,6 +130,15 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
+            if (errorMessage.isNotEmpty)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
@@ -132,9 +148,25 @@ class _LoginFormState extends State<LoginForm> {
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30))),
-              onPressed: () {
+              onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  Navigator.pushReplacementNamed(context, "/");
+                  final ApiService apiService = ApiService();
+                  final userLogin = UserLogin(email: email, password: password);
+
+                  try {
+                    final response = await apiService.loginUser(userLogin);
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('api_token', response.token);
+                    await prefs.setInt('user_id', response.userId);
+
+                    print('Token saved: ${response.token}');
+                    Navigator.pushReplacementNamed(context, "/create-program");
+                  } catch (e) {
+                    setState(() {
+                      errorMessage =
+                          'Une erreur est survenue !'; // Set the error message
+                    });
+                  }
                 }
               },
               child: Text("Se connecter", style: TextStyle(fontSize: 20)),
