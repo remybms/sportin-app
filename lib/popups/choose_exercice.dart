@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import '../widgets/exercice_template.dart';
 
 class ChooseExercisePopup extends StatelessWidget {
   final String categoryName;
+  final Function(String) onExerciseSelected;
 
-  ChooseExercisePopup({required this.categoryName});
+  ChooseExercisePopup({required this.categoryName, required this.onExerciseSelected});
+
+  final List<String> exerciseList = [
+    "Bench Press", "Push-Up", "Overhead Press",
+    "Pull-Up", "Lat Pulldown", "Barbell Row",
+    "Squat", "Lunges", "Deadlift"
+  ]; // test exercises
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +32,13 @@ class ChooseExercisePopup extends StatelessWidget {
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: 5,
+              itemCount: exerciseList.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text("$categoryName Exercise ${index + 1}"),
-                  trailing: Icon(Icons.fitness_center),
-                  onTap: () {
-                    Navigator.pop(context); // Close popup on selection
+                return ExerciseTemplate(
+                  exerciseName: exerciseList[index],
+                  onSelect: () {
+                    onExerciseSelected(exerciseList[index]);
+                    Navigator.pop(context); 
                   },
                 );
               },

@@ -18,18 +18,13 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
   late List<String> workoutOptions;
   String? _selectedWorkout;
+  String? _selectedExercise; // store selected 
 
   @override
   void initState() {
     super.initState();
-    // workout session based on selected number of workouts
-    workoutOptions =
-        List.generate(widget.workoutsPerWeek, (index) => "Séance ${index + 1}");
-
-    //  default selected workout = first item 
-    if (workoutOptions.isNotEmpty) {
-      _selectedWorkout = workoutOptions.first;
-    }
+    workoutOptions = List.generate(widget.workoutsPerWeek, (index) => "Séance ${index + 1}");
+    if (workoutOptions.isNotEmpty) _selectedWorkout = workoutOptions.first;
   }
 
   void _showCreateExercisePopup(BuildContext context) {
@@ -39,7 +34,13 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => ChooseCategoryPopup(),
+      builder: (context) => ChooseCategoryPopup(
+        onExerciseSelected: (selectedExercise) {
+          setState(() {
+            _selectedExercise = selectedExercise;
+          });
+        },
+      ),
     );
   }
 
@@ -79,10 +80,10 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 10),
 
-                  // Selection dropdown
+                  // Workout Selection Dropdown
                   Row(
                     children: [
-                      Text("Nom de la séance:"),
+                      Text("Workout name:"),
                       SizedBox(width: 10),
                       DropdownButton<String>(
                         value: _selectedWorkout,
@@ -103,14 +104,13 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 24),
 
-                  // nex Exercise btn
+                  // Add Exercise Button
                   ElevatedButton(
                     onPressed: () {
                       _showCreateExercisePopup(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                         side: BorderSide(color: Colors.black),
@@ -121,32 +121,22 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          "Add an exercise",
-                          style: TextStyle(color: Colors.black),
-                        ),
+                        Text("Add an exercise", style: TextStyle(color: Colors.black)),
                         SizedBox(width: 8),
                         Icon(Icons.add, color: Colors.black),
                       ],
                     ),
                   ),
 
+                  SizedBox(height: 10),
+
+                  // Show selected exercise
+                  if (_selectedExercise != null)
+                    Text("Selected Exercise: $_selectedExercise", style: TextStyle(fontSize: 16)),
+
                   SizedBox(height: 100),
                 ],
               ),
-            ),
-          ),
-
-          // Save prog btn
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: CustomButton(
-              text: "Save Program",
-              onPressed: () {
-                // Save logic here
-              },
             ),
           ),
         ],

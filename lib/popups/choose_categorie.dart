@@ -4,6 +4,10 @@ import 'choose_exercice.dart';
 const Color vertMix = Color(0x99A7D992);
 
 class ChooseCategoryPopup extends StatelessWidget {
+  final Function(String) onExerciseSelected;
+
+  ChooseCategoryPopup({required this.onExerciseSelected});
+
   void _openChooseExercisePopup(BuildContext context, String categoryName) {
     showModalBottomSheet(
       context: context,
@@ -11,7 +15,10 @@ class ChooseCategoryPopup extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => ChooseExercisePopup(categoryName: categoryName),
+      builder: (context) => ChooseExercisePopup(
+        categoryName: categoryName,
+        onExerciseSelected: onExerciseSelected,
+      ),
     );
   }
 
@@ -31,29 +38,6 @@ class ChooseCategoryPopup extends StatelessWidget {
           Text(
             "Select a category",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              hintText: "Search",
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.add),
-            label: Text("Add a category"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              side: BorderSide(color: Colors.black),
-            ),
           ),
           SizedBox(height: 10),
           Expanded(
