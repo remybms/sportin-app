@@ -15,14 +15,14 @@ class ChooseCategoryPopup extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Choisir une catégorie",
+            "Select a category",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
           TextField(
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              hintText: "Recherche",
+              hintText: "Search",
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
@@ -34,7 +34,7 @@ class ChooseCategoryPopup extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {},
             icon: Icon(Icons.add),
-            label: Text("Ajouter une catégorie"),
+            label: Text("Add a category"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
@@ -49,7 +49,7 @@ class ChooseCategoryPopup extends StatelessWidget {
                 (index) => Card(
                   color: Colors.white,
                   child: ListTile(
-                    title: Text("Nom"),
+                    title: Text("Name"),
                     trailing: Icon(Icons.more_vert),
                   ),
                 ),

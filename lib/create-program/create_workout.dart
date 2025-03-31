@@ -13,24 +13,38 @@ class CreateWorkoutPage extends StatefulWidget {
 }
 
 class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
-  final TextEditingController _workoutNameController = 
+  final TextEditingController _workoutNameController =
       TextEditingController(text: "Workout Name");
-  String _selectedWorkout = "Séance 1";
 
-  void _showChooseCategoryPopup(BuildContext context) {
+  late List<String> workoutOptions;
+  String? _selectedWorkout;
+
+  @override
+  void initState() {
+    super.initState();
+    // workout session based on selected number of workouts
+    workoutOptions =
+        List.generate(widget.workoutsPerWeek, (index) => "Séance ${index + 1}");
+
+    //  default selected workout = first item 
+    if (workoutOptions.isNotEmpty) {
+      _selectedWorkout = workoutOptions.first;
+    }
+  }
+
+  void _showCreateExercisePopup(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) => ChooseCategoryPopup(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> workoutOptions = List.generate(
-        widget.workoutsPerWeek, (index) => "Séance \${index + 1}");
-
     return Scaffold(
       appBar: AppBar(title: Text("Create Workout")),
       body: Stack(
@@ -41,14 +55,14 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Program Name Display
+                  // Program name
                   Text(
                     widget.programName,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Divider(thickness: 2, height: 20),
 
-                  // Editable workout name
+                  // Workout name (editable)
                   Row(
                     children: [
                       Icon(Icons.edit, color: Colors.grey),
@@ -63,7 +77,9 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
                     ],
                   ),
 
-                  // Workout selection dropdown
+                  SizedBox(height: 10),
+
+                  // Selection dropdown
                   Row(
                     children: [
                       Text("Nom de la séance:"),
@@ -78,7 +94,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            _selectedWorkout = newValue!;
+                            _selectedWorkout = newValue;
                           });
                         },
                       ),
@@ -87,16 +103,17 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 24),
 
-                  // Add New Exercise Button
+                  // nex Exercise btn
                   ElevatedButton(
                     onPressed: () {
-                      _showChooseCategoryPopup(context);
+                      _showCreateExercisePopup(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
-                        side: BorderSide(color: Colors.black), 
+                        side: BorderSide(color: Colors.black),
                       ),
                       backgroundColor: Colors.white,
                       elevation: 0,
@@ -120,7 +137,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
             ),
           ),
 
-          // Save Program Button (Fixed at the bottom)
+          // Save prog btn
           Positioned(
             bottom: 16,
             left: 16,
