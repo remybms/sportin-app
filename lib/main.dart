@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sportin/create-program/create_program.dart';
 import 'package:sportin/home/home_page.dart';
 import 'package:sportin/login/login_page.dart';
 import 'package:sportin/signin/signin_page.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  initializeDateFormatting().then((_) => runApp(MainApp()));
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -16,6 +16,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('fr'),
+      ],
       initialRoute: '/login',
       routes: {
         '/': (context) => Home(),

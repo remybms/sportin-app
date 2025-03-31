@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:sportin/popups/add_session.dart';
+import 'package:sportin/popups/delete_session.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -15,83 +16,163 @@ class Home extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Calendar(),
-            ],
-          ),
-        ),
+        child: DatePicker(),
       ),
     );
   }
 }
 
-class Calendar extends StatefulWidget {
+class DatePicker extends StatefulWidget {
+  const DatePicker({super.key});
+
   @override
-  _CalendarState createState() => _CalendarState();
+  State<DatePicker> createState() => _DatePickerState();
 }
 
-class _CalendarState extends State<Calendar> {
-  DateTime _selectedDay = DateTime.now();
+class _DatePickerState extends State<DatePicker> {
+  DateTime selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  List<Map<String, String>>? filteredSessions;
+
+  var sessions = [
+    {"date": "2025-04-01", "workout_id": "Course à pied"},
+    {"date": "2025-04-03", "workout_id": "Natation"},
+    {"date": "2025-04-03", "workout_id": "Musculation"},
+    {"date": "2025-03-30", "workout_id": "Yoga"},
+    {"date": "2025-03-31", "workout_id": "Vélo"}
+  ];
+
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      locale: Locale('fr'),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color.fromARGB(255, 58, 165, 8),
+              onPrimary: Colors.white,
+              surface: Color.fromARGB(255, 226, 242, 225),
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    setState(() {
+      selectedDate = pickedDate!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 226, 242, 225),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromARGB(140, 58, 165, 8),
-            blurRadius: 5,
-            spreadRadius: 2,
+    filteredSessions = sessions.where((session) {
+      final sessionDate = DateTime.parse(session['date']!);
+      return sessionDate == selectedDate;
+    }).toList();
+
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 20,
+        children: <Widget>[
+          OutlinedButton(
+            onPressed: _selectDate,
+            child: Text(
+              '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+              style: TextStyle(
+                  fontSize: 20, color: Color.fromARGB(255, 58, 165, 8)),
+            ),
           ),
         ],
       ),
-      child: TableCalendar(
-        headerStyle: HeaderStyle(
-          headerMargin: EdgeInsets.only(bottom: 20),
-          formatButtonVisible: false,
-          titleCentered: true, 
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Color.fromARGB(140, 58, 165, 8),
-                width: 2,
-              ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  builder: (context) => DeleteSession(
+                    sessions: filteredSessions!,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white10,
+                  shadowColor: Colors.transparent),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.delete,
+                    size: 30,
+                    color: const Color.fromARGB(170, 0, 0, 0),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Supprimer des séances",
+                    style: TextStyle(
+                      color: const Color.fromARGB(170, 0, 0, 0),
+                    ),
+                  )
+                ],
+              )),
+          ElevatedButton(
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (context) => AddSession(),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white10,
+              shadowColor: Colors.transparent,
             ),
-          ),  
-        ),
-        locale: 'fr_FR',
-        firstDay: DateTime.utc(2020, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: DateTime.now(),
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            _selectedDay = selectedDay;
-          });
-        },
-        calendarStyle: CalendarStyle(
-          
-          todayTextStyle: TextStyle(
-            color: Color.fromARGB(255, 58, 165, 8),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.add,
+                  size: 40,
+                  color: const Color.fromARGB(170, 0, 0, 0),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  "Ajouter une séance",
+                  style: TextStyle(
+                    color: const Color.fromARGB(170, 0, 0, 0),
+                  ),
+                )
+              ],
+            ),
           ),
-          todayDecoration: BoxDecoration(
-            color: Colors.white10,
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: BoxDecoration(
-            color: Color.fromARGB(255, 58, 165, 8),
-            shape: BoxShape.circle,
-          ),
-          selectedTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        ],
       ),
-    );
+      Expanded(
+        child: filteredSessions!.isEmpty
+            ? Center(child: Text("Aucune séance prévue"))
+            : ListView.builder(
+                itemCount: filteredSessions!.length,
+                itemBuilder: (context, index) {
+                  final session = filteredSessions![index];
+                  return ListTile(
+                    title: Text(
+                      session['workout_id']!,
+                      style: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                    ),
+                  );
+                },
+              ),
+      ),
+    ]);
   }
 }
