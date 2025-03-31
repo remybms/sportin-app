@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../widgets/green-btn.dart';
+import 'create_workout.dart';
 
 const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
 const Color vert = Color(0xFF3AA508);
@@ -12,10 +13,10 @@ class CreateProgramPage extends StatefulWidget {
 
 class _CreateProgramPageState extends State<CreateProgramPage> {
   TextEditingController _programNameController =
-      TextEditingController(text: "Program Name");
+  TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
   TextEditingController _weightController =
-      TextEditingController(text: "75");
+  TextEditingController(text: "75");
   DateTime? _startDate;
   DateTime? _endDate;
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -289,9 +290,17 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             left: 16,
             right: 16,
             child: CustomButton(
-              text: "Save Program",
+              text: "Next Step",
               onPressed: () {
-                // to add
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateWorkoutPage(
+                      programName: _programNameController.text,
+                      workoutsPerWeek: _workoutsPerWeek,
+                    ),
+                  ),
+                );
               },
             ),
           ),
