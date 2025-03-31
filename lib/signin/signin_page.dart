@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sportin/api_service.dart';
+import 'package:sportin/models/user_model.dart';
 
 class Signin extends StatelessWidget {
   @override
@@ -6,10 +8,10 @@ class Signin extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text("Sportin",
-                style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  )),
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              )),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
@@ -19,10 +21,9 @@ class Signin extends StatelessWidget {
           children: [
             Text("Inscription",
                 style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                  )
-                ),
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                )),
             SigninForm(),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -34,7 +35,8 @@ class Signin extends StatelessWidget {
                   overlayColor: Color.fromARGB(255, 58, 165, 8),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(width: 2, color: Color.fromARGB(255, 58, 165, 8)))),
+                      side: BorderSide(
+                          width: 2, color: Color.fromARGB(255, 58, 165, 8)))),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/login');
               },
@@ -56,7 +58,8 @@ class _SigninFormState extends State<SigninForm> {
   String username = "";
   String password = "";
   String confirmPassword = "";
-  bool _passwordVisible = true;
+  String errorMessage = "";
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +80,12 @@ class _SigninFormState extends State<SigninForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Nom d'utilisateur",
                 ),
               ),
@@ -98,10 +103,12 @@ class _SigninFormState extends State<SigninForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Email",
                 ),
               ),
@@ -120,10 +127,12 @@ class _SigninFormState extends State<SigninForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Mot de passe",
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -156,10 +165,12 @@ class _SigninFormState extends State<SigninForm> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 58, 165, 8))),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
-                  floatingLabelStyle: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                  floatingLabelStyle:
+                      TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
                   labelText: "Confirmer le mot de passe",
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -176,6 +187,15 @@ class _SigninFormState extends State<SigninForm> {
                 ),
               ),
             ),
+            if (errorMessage.isNotEmpty)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   minimumSize:
@@ -185,13 +205,25 @@ class _SigninFormState extends State<SigninForm> {
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30))),
-              onPressed: () {
+              onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  Navigator.pushReplacementNamed(context, "/");
+                  final ApiService apiService = ApiService();
+                  final user = User(
+                      username: username, email: email, password: password);
+
+                  try {
+                    final response = await apiService.createUser(user);
+                    Navigator.pushReplacementNamed(context, "/login");
+                  } catch (e) {
+                    setState(() {
+                      errorMessage =
+                          'Une erreur est survenue !'; // Set the error message
+                    });
+                  }
                 }
               },
               child: Text("S'inscrire", style: TextStyle(fontSize: 20)),
-            )
+            ),
           ],
         ));
   }
