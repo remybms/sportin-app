@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/chosen_exercice_template.dart';
 import '../widgets/green-btn.dart';
 import '../popups/choose_categorie.dart';
 
@@ -18,7 +19,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
   late List<String> workoutOptions;
   String? _selectedWorkout;
-  String? _selectedExercise; // store selected 
+  List<String> _selectedExercises = []; // to store the selected exercises
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
       builder: (context) => ChooseCategoryPopup(
         onExerciseSelected: (selectedExercise) {
           setState(() {
-            _selectedExercise = selectedExercise;
+            _selectedExercises.add(selectedExercise); // add selected exercise to list
           });
         },
       ),
@@ -80,7 +81,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 10),
 
-                  // Workout Selection Dropdown
+                  // select workout dropdown
                   Row(
                     children: [
                       Text("Workout name:"),
@@ -104,7 +105,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 24),
 
-                  // Add Exercise Button
+                  // add exercise Button
                   ElevatedButton(
                     onPressed: () {
                       _showCreateExercisePopup(context);
@@ -130,13 +131,25 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
 
                   SizedBox(height: 10),
 
-                  // Show selected exercise
-                  if (_selectedExercise != null)
-                    Text("Selected Exercise: $_selectedExercise", style: TextStyle(fontSize: 16)),
+                  // Show selected exercises
+                  Column(
+                    children: _selectedExercises.map((exercise) => ChosenExerciseTemplate(exerciseName: exercise)).toList(),
+                  ),
 
                   SizedBox(height: 100),
                 ],
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: CustomButton(
+              text: "Save program",
+              onPressed: () {
+                // todo
+              },
             ),
           ),
         ],
