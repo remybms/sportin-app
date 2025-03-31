@@ -17,8 +17,61 @@ class Home extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            spacing: 20,
             children: [
               Calendar(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white10,
+                          shadowColor: Colors.transparent),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 30,
+                            color: const Color.fromARGB(170, 0, 0, 0),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Supprimer des séances",
+                            style: TextStyle(
+                              color: const Color.fromARGB(170, 0, 0, 0),
+                            ),
+                          )
+                        ],
+                      )),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white10,
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.add,
+                          size: 40,
+                          color: const Color.fromARGB(170, 0, 0, 0),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Ajouter une séance",
+                          style: TextStyle(
+                            color: const Color.fromARGB(170, 0, 0, 0),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Container(),
             ],
           ),
         ),
@@ -54,7 +107,7 @@ class _CalendarState extends State<Calendar> {
         headerStyle: HeaderStyle(
           headerMargin: EdgeInsets.only(bottom: 20),
           formatButtonVisible: false,
-          titleCentered: true, 
+          titleCentered: true,
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
@@ -62,7 +115,7 @@ class _CalendarState extends State<Calendar> {
                 width: 2,
               ),
             ),
-          ),  
+          ),
         ),
         locale: 'fr_FR',
         firstDay: DateTime.utc(2020, 1, 1),
@@ -75,7 +128,6 @@ class _CalendarState extends State<Calendar> {
           });
         },
         calendarStyle: CalendarStyle(
-          
           todayTextStyle: TextStyle(
             color: Color.fromARGB(255, 58, 165, 8),
           ),
