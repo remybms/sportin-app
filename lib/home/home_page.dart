@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportin/nav-bar/nav_bar.dart';
 import 'package:sportin/popups/add_session.dart';
 import 'package:sportin/popups/delete_session.dart';
 
@@ -18,6 +19,10 @@ class Home extends StatelessWidget {
       body: Center(
         child: DatePicker(),
       ),
+      bottomNavigationBar: NavBar(selectedIndex: 0, onItemTapped: (index) {
+        // Handle navigation here if needed
+        return index;
+      }),
     );
   }
 }
@@ -32,14 +37,64 @@ class DatePicker extends StatefulWidget {
 class _DatePickerState extends State<DatePicker> {
   DateTime selectedDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  List<Map<String, String>>? filteredSessions;
 
   var sessions = [
-    {"date": "2025-04-01", "workout_id": "Running"},
-    {"date": "2025-04-03", "workout_id": "Swimming"},
-    {"date": "2025-04-03", "workout_id": "Bodybuilding"},
-    {"date": "2025-03-30", "workout_id": "Yoga"},
-    {"date": "2025-03-31", "workout_id": "Cycling"}
+    {
+      "id": 1,
+      "workout": "Pectoraux & Triceps",
+      "program": "Musculation",
+      "timestamp_modif": "2025-03-01",
+      "date": "2025-04-01",
+      "color": "#FF0000"
+    },
+    {
+      "id": 2,
+      "workout": "Dos & Biceps",
+      "program": "Musculation",
+      "timestamp_modif": "2025-03-01",
+      "date": "2025-04-01",
+      "color": "#0000FF"
+    },
+    {
+      "id": 3,
+      "workout": "Jambes",
+      "program": "Musculation",
+      "timestamp_modif": "2025-03-01",
+      "date": "2025-04-05",
+      "color": "#008000"
+    },
+    {
+      "id": 4,
+      "workout": "Cardio intense",
+      "program": "HIIT",
+      "timestamp_modif": "2025-02-15",
+      "date": "2025-04-07",
+      "color": "#FFA500"
+    },
+    {
+      "id": 5,
+      "workout": "Full Body",
+      "program": "HIIT",
+      "timestamp_modif": "2025-02-15",
+      "date": "2025-04-09",
+      "color": "#FFFF00"
+    },
+    {
+      "id": 6,
+      "workout": "Développé Couché",
+      "program": "Force",
+      "timestamp_modif": "2025-01-10",
+      "date": "2025-04-10",
+      "color": "#808080"
+    },
+    {
+      "id": 7,
+      "workout": "Squat lourd",
+      "program": "Force",
+      "timestamp_modif": "2025-01-10",
+      "date": "2025-04-12",
+      "color": "#000000"
+    }
   ];
 
   Future<void> _selectDate() async {
@@ -75,8 +130,8 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    filteredSessions = sessions.where((session) {
-      final sessionDate = DateTime.parse(session['date']!);
+    List<Map<String, Object>> filteredSessions = sessions.where((session) {
+      final sessionDate = DateTime.parse(session['date'] as String);
       return sessionDate == selectedDate;
     }).toList();
 
@@ -104,7 +159,7 @@ class _DatePickerState extends State<DatePicker> {
                 await showDialog(
                   context: context,
                   builder: (context) => DeleteSession(
-                    sessions: filteredSessions!,
+                    sessions: filteredSessions,
                   ),
                 );
               },
@@ -161,18 +216,51 @@ class _DatePickerState extends State<DatePicker> {
         child: filteredSessions!.isEmpty
             ? Center(child: Text("No workout scheduled"))
             : ListView.builder(
-                itemCount: filteredSessions!.length,
+                itemCount: filteredSessions.length,
                 itemBuilder: (context, index) {
-                  final session = filteredSessions![index];
+                  final session = filteredSessions[index];
                   return ListTile(
-                    title: Text(
-                      session['workout_id']!,
-                      style: TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                          Text(
+                            session['program'] as String,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Text(
+                            session['timestamp_modif'] as String,
+                            style: TextStyle(color: Colors.black),
+                          ),]
+                        ),
+                        Row(children: [
+                          Icon(
+                            Icons.circle,
+                            color: getColorFromHex(session['color'] as String),
+                          ),
+                          Text(
+                            session['workout'] as String,
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ])
+                      ],
                     ),
                   );
                 },
               ),
       ),
     ]);
+  }
+}
+
+Color getColorFromHex(String hexColor) {
+  hexColor = hexColor.replaceAll("#", "");
+  if (hexColor.length == 6) {
+    return Color(int.parse("0xFF$hexColor"));
+  } else if (hexColor.length == 8) {
+    return Color(int.parse("0x$hexColor"));
+  } else {
+    return Colors.black;
   }
 }

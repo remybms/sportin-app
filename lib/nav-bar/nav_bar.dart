@@ -38,16 +38,16 @@ class NavBar extends StatelessWidget {
         // Navigate to the corresponding route
         switch (index) {
           case 0:
-            Navigator.pushNamed(context, '/home');
+            Navigator.pushNamed(context, '/');
             break;
           case 1:
-            Navigator.pushNamed(context, '/programs');
+            Navigator.pushNamed(context, '/create-program');
             break;
           case 2:
             Navigator.pushNamed(context, '/nutrition');
             break;
           case 3:
-            Navigator.pushNamed(context, '/settings');
+            Navigator.pushNamed(context, '/parameters');
             break;
         }
         onItemTapped(index); // Update the selected index
