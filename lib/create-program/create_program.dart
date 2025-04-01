@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:sportin/api_service.dart';
 import 'package:sportin/models/program/program_model.dart';
 import '../widgets/green-btn.dart';
@@ -14,6 +16,37 @@ class CreateProgramPage extends StatefulWidget {
 }
 
 class _CreateProgramPageState extends State<CreateProgramPage> {
+  final SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _commentController.text = result.recognizedWords;
+    });
+  }
+
   TextEditingController _programNameController =
       TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
@@ -102,6 +135,17 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                       Icon(Icons.comment, color: Colors.black),
                       SizedBox(width: 8),
                       Text("Comment"),
+                      _speechEnabled
+                          ? FloatingActionButton(
+                              onPressed: _speechToText.isNotListening
+                                  ? _startListening
+                                  : _stopListening,
+                              tooltip: 'Listen',
+                              child: Icon(_speechToText.isNotListening
+                                  ? Icons.mic_off
+                                  : Icons.mic),
+                            )
+                          : Container(),
                     ],
                   ),
                   TextField(
