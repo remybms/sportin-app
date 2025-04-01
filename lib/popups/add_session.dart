@@ -1,9 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class SelectProgram extends StatelessWidget {
-  var programs = [
+  final programs = [
     {
       "id": 1,
       "user_id": 101,
@@ -85,8 +83,7 @@ class SelectProgram extends StatelessWidget {
 
 class AddSession extends StatelessWidget {
   final int idProgram;
-  List<Map<String, Object>>? filteredSessions;
-  var sessions = [
+  final sessions = [
   {"id": 1, "name": "Pectoraux & Triceps", "program_id": 1, "color": "#FF0000"},
   {"id": 2, "name": "Dos & Biceps", "program_id": 1, "color": "#0000FF"}, 
   {"id": 3, "name": "Jambes", "program_id": 1, "color": "#008000"}, 
@@ -101,7 +98,7 @@ class AddSession extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    filteredSessions = sessions.where((session) {
+    List<Map<String, Object>> filteredSessions = sessions.where((session) {
       return idProgram == session['program_id'] as int;
     }).toList();
 
@@ -110,12 +107,12 @@ class AddSession extends StatelessWidget {
       content: SizedBox(
         width: double.maxFinite,
         height: 450,
-        child: filteredSessions!.isEmpty
+        child: filteredSessions.isEmpty
             ? Center(child: Text("Aucune séance pour ce programme"))
             : ListView.builder(
-                itemCount: filteredSessions!.length,
+                itemCount: filteredSessions.length,
                 itemBuilder: (context, index) {
-                  final session = filteredSessions![index];
+                  final session = filteredSessions[index];
                   return ListTile(
                       title: Container(
                           height: 50,
