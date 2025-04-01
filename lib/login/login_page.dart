@@ -160,7 +160,7 @@ class _LoginFormState extends State<LoginForm> {
                     await prefs.setInt('user_id', response.userId);
 
                     print('Token saved: ${response.token}');
-                    Navigator.pushReplacementNamed(context, "/create-program");
+                    Navigator.pushReplacementNamed(context, "/");
                   } catch (e) {
                     setState(() {
                       errorMessage =

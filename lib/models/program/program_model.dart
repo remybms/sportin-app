@@ -16,6 +16,7 @@ class ProgramResponse with _$ProgramResponse {
     required String endDate,
     required String objectif,
     required int weightObjectif,
+    required int workoutCount,
   }) = _ProgramResponse;
 
   factory ProgramResponse.fromJson(Map<String, dynamic> json) =>
