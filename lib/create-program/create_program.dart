@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportin/api_service.dart';
 import 'package:sportin/models/program/program_model.dart';
+import 'package:sportin/models/workout/workout_model.dart';
 import '../widgets/green-btn.dart';
 import 'create_workout.dart';
 
@@ -16,7 +17,7 @@ class CreateProgramPage extends StatefulWidget {
 
 class _CreateProgramPageState extends State<CreateProgramPage> {
   TextEditingController _programNameController =
-  TextEditingController(text: "Program Name");
+      TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
   TextEditingController _weightController = TextEditingController(text: "75");
   DateTime? _startDate;
@@ -323,10 +324,27 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
 
                 try {
                   final response = await apiService.createProgram(program);
+                  if (response == null) {
+                    setState(() {
+                      errorMessage = 'Error creating program!';
+                    });
+                    return;
+                  }
+
+                  for (var i = 0; i < _workoutsPerWeek; i++) {
+                    final workout = Workout(
+                      programId: response.id,
+                      name: "Workout ${i + 1}",
+                      color: "green",
+                    );
+                    await apiService.createWorkout(workout);
+                  }
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateWorkoutPage(
+                        programId: response.id,
                         programName: _programNameController.text,
                         workoutsPerWeek: _workoutsPerWeek,
                       ),
