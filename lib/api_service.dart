@@ -36,14 +36,18 @@ class ApiService {
     }
   }
 
-  Future<ProgramResponse> getPrograms() async {
+  Future<List<ProgramResponse>> getPrograms() async {
     final response = await http.get(
       Uri.parse(baseUrl + '/programs/user'),
       headers: {'Content-Type': 'application/json'},
     );
 
     if (response.statusCode == 200) {
-      return ProgramResponse.fromJson(json.decode(response.body));
+      print(response.body);
+      return json.decode(response.body)
+          .map<ProgramResponse>((json) => ProgramResponse.fromJson(json))
+          .toList()
+          .cast<ProgramResponse>();
     } else {
       throw Exception(json.decode(response.body)['message']);
     }
