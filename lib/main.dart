@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sportin/create-program/create_program.dart';
 import 'package:sportin/home/home_page.dart';
 import 'package:sportin/login/login_page.dart';
+import 'package:sportin/nutrition/nutrition.dart';
 import 'package:sportin/parameters/parameters.dart';
 import 'package:sportin/see-all-programs/see_all_programs.dart';
 import 'package:sportin/signin/signin_page.dart';
