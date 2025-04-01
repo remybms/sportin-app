@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportin/api_service.dart';
+import 'package:sportin/models/program/program_model.dart';
 import '../widgets/green-btn.dart';
 import 'create_workout.dart';
 
@@ -15,8 +18,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
   TextEditingController _programNameController =
   TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
-  TextEditingController _weightController =
-  TextEditingController(text: "75");
+  TextEditingController _weightController = TextEditingController(text: "75");
   DateTime? _startDate;
   DateTime? _endDate;
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -30,6 +32,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
     "Weight Maintenance"
   ];
   int _workoutsPerWeek = 3;
+  String errorMessage = '';
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     DateTime initialDate =
@@ -127,8 +130,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                       ElevatedButton(
                         onPressed: () => _selectDate(context, true),
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -147,8 +150,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                       ElevatedButton(
                         onPressed: () => _selectDate(context, false),
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -184,8 +187,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                   Wrap(
                     spacing: 8.0,
                     children: _objectives.map((objective) {
-                      bool isSelected =
-                          _selectedObjectives.contains(objective);
+                      bool isSelected = _selectedObjectives.contains(objective);
                       return ChoiceChip(
                         label: Text(objective),
                         selected: isSelected,
@@ -193,9 +195,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                         selectedColor: vertMix,
                         backgroundColor: Colors.white,
                         labelStyle: TextStyle(
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       );
                     }).toList(),
@@ -236,7 +237,8 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                             controller: _weightController,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
-                            decoration: InputDecoration(border: InputBorder.none),
+                            decoration:
+                                InputDecoration(border: InputBorder.none),
                           ),
                         ),
                         Text("kg"),
@@ -283,24 +285,51 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
               ),
             ),
           ),
-
+          if (errorMessage.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+              child: Text(
+                errorMessage,
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            ),
           // Save prog btn
           Positioned(
             bottom: 16,
             left: 16,
             right: 16,
             child: CustomButton(
-              text: "Next Step",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateWorkoutPage(
-                      programName: _programNameController.text,
-                      workoutsPerWeek: _workoutsPerWeek,
-                    ),
-                  ),
+              text: "Save Program",
+              onPressed: () async {
+                final ApiService apiService = ApiService();
+                final prefs = await SharedPreferences.getInstance();
+                final userId = prefs.getInt('user_id') ?? 0;
+                if (userId == 0) {
+                  setState(() {
+                    errorMessage = 'Youre not connected!';
+                  });
+                  return;
+                }
+                final program = Program(
+                  userId: userId,
+                  favorite: false,
+                  name: _programNameController.text,
+                  comment: _commentController.text,
+                  startDate: _startDate.toString(),
+                  endDate: _endDate.toString(),
+                  objectif: _selectedObjectives.join(", "),
+                  weightObjectif: int.tryParse(_weightController.text) ?? 75,
                 );
+
+                try {
+                  final response = await apiService.createProgram(program);
+                } catch (e) {
+                  print('Error: $e');
+                  setState(() {
+                    errorMessage =
+                        'Une erreur est survenue !'; // Set the error message
+                  });
+                }
               },
             ),
           ),
