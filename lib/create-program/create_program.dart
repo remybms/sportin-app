@@ -299,7 +299,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
             left: 16,
             right: 16,
             child: CustomButton(
-              text: "Save Program",
+              text: "Next step",
               onPressed: () async {
                 final ApiService apiService = ApiService();
                 final prefs = await SharedPreferences.getInstance();
@@ -323,6 +323,15 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
 
                 try {
                   final response = await apiService.createProgram(program);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateWorkoutPage(
+                        programName: _programNameController.text,
+                        workoutsPerWeek: _workoutsPerWeek,
+                      ),
+                    ),
+                  );
                 } catch (e) {
                   print('Error: $e');
                   setState(() {
