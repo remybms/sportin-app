@@ -131,7 +131,7 @@ class _DatePickerState extends State<DatePicker> {
             onPressed: () async {
               await showDialog(
                 context: context,
-                builder: (context) => AddSession(),
+                builder: (context) => SelectProgram(),
               );
             },
             style: ElevatedButton.styleFrom(
