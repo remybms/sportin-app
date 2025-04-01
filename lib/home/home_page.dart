@@ -212,7 +212,7 @@ class _DatePickerState extends State<DatePicker> {
           ),
         ],
       ),
-      Expanded( Center(child: Text("Aucune séance prévue"))
+      Expanded(
         child: filteredSessions!.isEmpty
             ? Center(child: Text("No workout scheduled"))
             : ListView.builder(
