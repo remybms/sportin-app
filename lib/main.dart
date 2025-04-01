@@ -9,7 +9,6 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() {
   runApp(MainApp());
 }
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 

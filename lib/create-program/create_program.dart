@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sportin/api_service.dart';
 import 'package:sportin/models/program/program_model.dart';
 import '../widgets/green-btn.dart';
+import 'create_workout.dart';
 
 const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
 const Color vert = Color(0xFF3AA508);
@@ -15,7 +16,7 @@ class CreateProgramPage extends StatefulWidget {
 
 class _CreateProgramPageState extends State<CreateProgramPage> {
   TextEditingController _programNameController =
-      TextEditingController(text: "Program Name");
+  TextEditingController(text: "Program Name");
   TextEditingController _commentController = TextEditingController();
   TextEditingController _weightController = TextEditingController(text: "75");
   DateTime? _startDate;
