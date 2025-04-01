@@ -20,13 +20,13 @@ class Login extends StatelessWidget {
             child: Column(
           spacing: MediaQuery.of(context).size.height * 0.1,
           children: [
-            Text("Connexion",
+            Text("Login",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w500,
                 )),
             LoginForm(),
-            Text("Mot de passe oublié ?",
+            Text("Forgot password ?",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -46,7 +46,7 @@ class Login extends StatelessWidget {
               onPressed: () async {
                 Navigator.pushReplacementNamed(context, '/signin');
               },
-              child: Text('S\'inscrire', style: TextStyle(fontSize: 20)),
+              child: Text('Register', style: TextStyle(fontSize: 20)),
             ),
           ],
         )));
@@ -90,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
                       borderSide: BorderSide(color: Colors.black)),
                   floatingLabelStyle:
                       TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Adresse email",
+                  labelText: "Email address",
                 ),
               ),
             ),
@@ -114,7 +114,7 @@ class _LoginFormState extends State<LoginForm> {
                       borderSide: BorderSide(color: Colors.black)),
                   floatingLabelStyle:
                       TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Mot de passe",
+                  labelText: "Password",
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible
@@ -157,18 +157,19 @@ class _LoginFormState extends State<LoginForm> {
                     final response = await apiService.loginUser(userLogin);
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString('api_token', response.token);
+                    await prefs.setInt('user_id', response.userId);
 
                     print('Token saved: ${response.token}');
-                    Navigator.pushReplacementNamed(context, "/");
+                    Navigator.pushReplacementNamed(context, "/create-program");
                   } catch (e) {
                     setState(() {
                       errorMessage =
-                          'Une erreur est survenue !'; // Set the error message
+                          'An error occurred !'; // Set the error message
                     });
                   }
                 }
               },
-              child: Text("Se connecter", style: TextStyle(fontSize: 20)),
+              child: Text("Login", style: TextStyle(fontSize: 20)),
             )
           ],
         ));
