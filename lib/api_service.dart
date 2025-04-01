@@ -6,7 +6,7 @@ import 'package:sportin/models/user_login_model.dart';
 import 'models/user_model.dart';
 
 class ApiService {
-  final String baseUrl = 'http://10.0.2.2:3001/api/v1';
+  final String baseUrl = 'http://dpocean.com:3001/api/v1';
 
   Future<UserResponse> createUser(User user) async {
     final response = await http.post(
