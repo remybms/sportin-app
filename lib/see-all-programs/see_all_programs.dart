@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sportin/api_service.dart';
 import 'package:sportin/nav-bar/nav_bar.dart';
 import 'package:sportin/see-all-programs/program.dart';
 
@@ -12,31 +13,6 @@ class SeeAllPrograms extends StatefulWidget {
 
 class _SeeAllProgramsState extends State<SeeAllPrograms> {
 
-  final List<Program> _list = [Program(
-        name: "Programme 1",
-        lastUpdate: "2023-10-01",
-        workoutCount: 6,
-      )];
-
-
-  Future<void> _loadPrograms() async {
-    // Simulate a network call to fetch programs
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      _list.add(Program(
-        name: "Programme 1",
-        lastUpdate: "2023-10-01",
-        workoutCount: 6,
-      ));
-      _list.add(Program(
-        name: "Programme 2",
-        lastUpdate: "2023-10-02",
-        workoutCount: 5,
-      ));
-    });
-  }
-
-  
 
 @override
 Widget build(BuildContext context) {
@@ -53,12 +29,11 @@ Widget build(BuildContext context) {
           centerTitle: true,
         ),
       bottomNavigationBar: NavBar(selectedIndex: 1, onItemTapped: (index) {
-        // Handle navigation here if needed
         return index;
       }),
       body: Column(
         children: [
-          SizedBox(height: 20), // Space between title and button
+          SizedBox(height: 20),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               minimumSize: Size(MediaQuery.of(context).size.width * 0.65, 45),
@@ -72,54 +47,70 @@ Widget build(BuildContext context) {
               ),
             ),
             onPressed: () {
-              // Handle adding a new program here
-              Navigator.pushNamed(context, '/addProgram');
+              Navigator.pushNamed(context, '/create-program');
             },
             label: const Text("Create program"),
             icon: const Icon(Icons.add),
             iconAlignment: IconAlignment.end
           ),
-          SizedBox(height: 20), // Space between title and button
-          Expanded(
-            child: ListView.builder(
-              itemCount: _list.length,
-              // itemBuilder: (context, index) => Container(),
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  color: Color.fromARGB(255, 226, 242, 225),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(_list[index].name, style: TextStyle(fontSize: 20)),
-                            Text("Last updated: ${_list[index].lastUpdate}", style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
+          SizedBox(height: 20),
+          FutureBuilder(future: ApiService().getPrograms(), builder: (context, snapshot) {
+            final List<Program> _list = [];
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            } else if (!snapshot.hasData) {
+              return Center(child: Text("No programs found."));
+            } else {
+              _list.clear();
+              final programs = snapshot.data!;
+              for (var program in programs) {
+                final date = DateTime.parse(program.timestampModif);
+                final formatDate = "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";;
+                _list.add(Program(name: program.name, lastUpdate: formatDate, workoutCount: program.workoutCount, isFavorite: program.favorite));
+              }
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: _list.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: Color.fromARGB(255, 226, 242, 225),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_list[index].name, style: TextStyle(fontSize: 20)),
+                                Text("Last updated: ${_list[index].lastUpdate}", style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text("${_list[index].workoutCount} Workout${_list[index].workoutCount > 1 ? 's' : ''}", style: TextStyle(fontSize: 16)),
+                          IconButton(
+                            icon: Icon(
+                              _list[index].isFavorite ? Icons.star : Icons.star_border,
+                              color: _list[index].isFavorite ? Colors.yellow : Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _list[index].isFavorite = !_list[index].isFavorite;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 10),
-                      Text("${_list[index].workoutCount} Workout${_list[index].workoutCount > 1 ? 's' : ''}", style: TextStyle(fontSize: 16)),
-                      IconButton(
-                        icon: Icon(
-                          _list[index].isFavorite ? Icons.star : Icons.star_border,
-                          color: _list[index].isFavorite ? Colors.yellow : Colors.grey,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _list[index].isFavorite = !_list[index].isFavorite;
-                          });
-                        },
-                      ),
-                    ],
+                    )
                   ),
-                )
-              ),
-            ),
-          ),
+                ),
+              );
+            }
+          }),
        ],
       ),
     ),

@@ -39,13 +39,22 @@ class ApiService {
   }
 
   Future<List<ProgramResponse>> getPrograms() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('api_token');
+
+    if (token == null) {
+      throw Exception('Token not found. Please log in again.');
+    }
+
     final response = await http.get(
       Uri.parse(baseUrl + '/programs/user'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       return json.decode(response.body)
           .map<ProgramResponse>((json) => ProgramResponse.fromJson(json))
           .toList()
