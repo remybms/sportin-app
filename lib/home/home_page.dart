@@ -35,11 +35,11 @@ class _DatePickerState extends State<DatePicker> {
   List<Map<String, String>>? filteredSessions;
 
   var sessions = [
-    {"date": "2025-04-01", "workout_id": "Course à pied"},
-    {"date": "2025-04-03", "workout_id": "Natation"},
-    {"date": "2025-04-03", "workout_id": "Musculation"},
+    {"date": "2025-04-01", "workout_id": "Running"},
+    {"date": "2025-04-03", "workout_id": "Swimming"},
+    {"date": "2025-04-03", "workout_id": "Bodybuilding"},
     {"date": "2025-03-30", "workout_id": "Yoga"},
-    {"date": "2025-03-31", "workout_id": "Vélo"}
+    {"date": "2025-03-31", "workout_id": "Cycling"}
   ];
 
   Future<void> _selectDate() async {
@@ -120,7 +120,7 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Supprimer des séances",
+                    "Delete workouts",
                     style: TextStyle(
                       color: const Color.fromARGB(170, 0, 0, 0),
                     ),
@@ -147,7 +147,7 @@ class _DatePickerState extends State<DatePicker> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "Ajouter une séance",
+                  "Add a workout",
                   style: TextStyle(
                     color: const Color.fromARGB(170, 0, 0, 0),
                   ),
@@ -159,7 +159,7 @@ class _DatePickerState extends State<DatePicker> {
       ),
       Expanded(
         child: filteredSessions!.isEmpty
-            ? Center(child: Text("Aucune séance prévue"))
+            ? Center(child: Text("No workout scheduled"))
             : ListView.builder(
                 itemCount: filteredSessions!.length,
                 itemBuilder: (context, index) {

@@ -68,7 +68,7 @@ class _ChosenExerciseTemplateState extends State<ChosenExerciseTemplate> {
             TextButton.icon(
               onPressed: _addSet,
               icon: Icon(Icons.add),
-              label: Text("Ajouter une série"),
+              label: Text("Add a set"),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -77,7 +77,7 @@ class _ChosenExerciseTemplateState extends State<ChosenExerciseTemplate> {
               ),
             ),
             SizedBox(height: 10),
-            Text("${sets.length} séries / XX répétitions"),
+            Text("${sets.length} sets / XX reps"),
           ],
         ),
       ),

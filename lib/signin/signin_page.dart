@@ -19,7 +19,7 @@ class Signin extends StatelessWidget {
             child: Column(
           spacing: MediaQuery.of(context).size.height * 0.1,
           children: [
-            Text("Inscription",
+            Text("Register",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w500,
@@ -40,7 +40,7 @@ class Signin extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/login');
               },
-              child: Text('Se connecter', style: TextStyle(fontSize: 20)),
+              child: Text('Login', style: TextStyle(fontSize: 20)),
             ),
           ],
         )));
@@ -86,7 +86,7 @@ class _SigninFormState extends State<SigninForm> {
                       borderSide: BorderSide(color: Colors.black)),
                   floatingLabelStyle:
                       TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Nom d'utilisateur",
+                  labelText: "Username",
                 ),
               ),
             ),
@@ -133,7 +133,7 @@ class _SigninFormState extends State<SigninForm> {
                       borderSide: BorderSide(color: Colors.black)),
                   floatingLabelStyle:
                       TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Mot de passe",
+                  labelText: "Password",
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible
@@ -171,7 +171,7 @@ class _SigninFormState extends State<SigninForm> {
                       borderSide: BorderSide(color: Colors.black)),
                   floatingLabelStyle:
                       TextStyle(color: Color.fromARGB(255, 58, 165, 8)),
-                  labelText: "Confirmer le mot de passe",
+                  labelText: "Confirm password",
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible
@@ -217,12 +217,12 @@ class _SigninFormState extends State<SigninForm> {
                   } catch (e) {
                     setState(() {
                       errorMessage =
-                          'Une erreur est survenue !'; // Set the error message
+                          'An error occurred !'; // Set the error message
                     });
                   }
                 }
               },
-              child: Text("S'inscrire", style: TextStyle(fontSize: 20)),
+              child: Text("Register", style: TextStyle(fontSize: 20)),
             ),
           ],
         ));
