@@ -354,7 +354,7 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                   print('Error: $e');
                   setState(() {
                     errorMessage =
-                        'Une erreur est survenue !'; // Set the error message
+                        'An error occurred !'; // Set the error message
                   });
                 }
               },

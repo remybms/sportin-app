@@ -44,7 +44,7 @@ class SelectProgram extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Color.fromARGB(255, 167, 217, 146),
-      title: Text("Sélectionner un programme"),
+      title: Text("Select a program"),
       content: SizedBox(
           width: double.maxFinite,
           height: 600,
@@ -84,13 +84,13 @@ class SelectProgram extends StatelessWidget {
 class AddSession extends StatelessWidget {
   final int idProgram;
   final sessions = [
-  {"id": 1, "name": "Pectoraux & Triceps", "program_id": 1, "color": "#FF0000"},
-  {"id": 2, "name": "Dos & Biceps", "program_id": 1, "color": "#0000FF"}, 
-  {"id": 3, "name": "Jambes", "program_id": 1, "color": "#008000"}, 
-  {"id": 4, "name": "Cardio intense", "program_id": 2, "color": "#FFA500"},
+  {"id": 1, "name": "Chest & Triceps", "program_id": 1, "color": "#FF0000"},
+  {"id": 2, "name": "Back & Biceps", "program_id": 1, "color": "#0000FF"}, 
+  {"id": 3, "name": "Legs", "program_id": 1, "color": "#008000"}, 
+  {"id": 4, "name": "Intense Cardio", "program_id": 2, "color": "#FFA500"},
   {"id": 5, "name": "Full Body", "program_id": 2, "color": "#FFFF00"}, 
-  {"id": 6, "name": "Développé Couché", "program_id": 3, "color": "#808080"}, 
-  {"id": 7, "name": "Squat lourd", "program_id": 3, "color": "#000000"} 
+  {"id": 6, "name": "Bench press", "program_id": 3, "color": "#808080"}, 
+  {"id": 7, "name": "Back squat", "program_id": 3, "color": "#000000"} 
 ];
 
 
@@ -108,7 +108,7 @@ class AddSession extends StatelessWidget {
         width: double.maxFinite,
         height: 450,
         child: filteredSessions.isEmpty
-            ? Center(child: Text("Aucune séance pour ce programme"))
+            ? Center(child: Text("No workouts for this program"))
             : ListView.builder(
                 itemCount: filteredSessions.length,
                 itemBuilder: (context, index) {
