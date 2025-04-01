@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DeleteSession extends StatelessWidget {
-  final List<Map<String, String>> sessions;
+  final List<Map<String, Object>> sessions;
 
   const DeleteSession({super.key, required this.sessions});
 
@@ -26,7 +26,7 @@ class DeleteSession extends StatelessWidget {
                   child: Row(
                   children: [
                   CheckButton(),
-                  Text(session['workout_id']!)
+                  Text(session['workout'] as String)
                 ]),
               ));
             },
