@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportin/nav-bar/nav_bar.dart';
 import 'package:sportin/popups/add_session.dart';
 import 'package:sportin/popups/delete_session.dart';
 
@@ -18,6 +19,10 @@ class Home extends StatelessWidget {
       body: Center(
         child: DatePicker(),
       ),
+      bottomNavigationBar: NavBar(selectedIndex: 0, onItemTapped: (index) {
+        // Handle navigation here if needed
+        return index;
+      }),
     );
   }
 }
