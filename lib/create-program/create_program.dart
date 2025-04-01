@@ -136,14 +136,19 @@ class _CreateProgramPageState extends State<CreateProgramPage> {
                       SizedBox(width: 8),
                       Text("Comment"),
                       _speechEnabled
-                          ? FloatingActionButton(
+                          ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: CircleBorder(side: BorderSide(width: 1)),
+                              iconSize: 20
+                            ),
                               onPressed: _speechToText.isNotListening
                                   ? _startListening
                                   : _stopListening,
-                              tooltip: 'Listen',
                               child: Icon(_speechToText.isNotListening
                                   ? Icons.mic_off
-                                  : Icons.mic),
+                                  : Icons.mic, color: Color.fromARGB(255, 58, 162, 8),),
                             )
                           : Container(),
                     ],
