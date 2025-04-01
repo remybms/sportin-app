@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:sportin/nav-bar/nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sportin/models/user_login_model.dart';
 
-const Color vertMix = Color(0x99A7D992); // 0x99 = 60% opacity
+const Color vertMix = Color(0x99A7D992);
 const Color vert = Color(0xFF3AA508);
 
-class ParametersPage extends StatelessWidget {
-
-  // Logout
+class ParametersPage extends StatefulWidget {
   const ParametersPage({super.key});
-  Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('api_token'); 
-    await prefs.remove('user_id'); 
 
-    // Redirect to login page
-    Navigator.pushReplacementNamed(context, '/login');
+  @override
+  _ParametersPageState createState() => _ParametersPageState();
+}
+
+class _ParametersPageState extends State<ParametersPage> {
+  String _userName = "Loading...";
+  String _userEmail = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userName = prefs.getString('user_name') ?? "Unknown User";
+      _userEmail = prefs.getString('user_email') ?? "Unknown email";
+    });
+  }
+
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); 
+
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 
   @override
@@ -27,7 +49,7 @@ class ParametersPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // profile Card
+            // Profile Card
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -45,11 +67,9 @@ class ParametersPage extends StatelessWidget {
                     SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      // use user infos instead
                       children: [
-                        Text("Bob Marchant", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text("bob.marchant@gmail.com", style: TextStyle(color: Colors.grey[600])),
-                        Text("+064382876", style: TextStyle(color: Colors.grey[600])),
+                        Text(_userName, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text(_userEmail, style: TextStyle(color: Colors.grey[600])),
                       ],
                     ),
                   ],
@@ -58,21 +78,21 @@ class ParametersPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            Text("Compte", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildListTile(Icons.settings, "Paramètres du compte"),
+            Text("Account", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            _buildListTile(Icons.settings, "Account settings"),
             _buildListTile(Icons.emoji_events, "Records"),
-            _buildListTile(Icons.bar_chart, "Statistiques"),
+            _buildListTile(Icons.bar_chart, "Stats"),
             _buildListTile(Icons.more_horiz, "Lorem Ipsum"),
-            
+
             SizedBox(height: 20),
 
             Text("General", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildListTile(Icons.article, "Termes et conditions"),
-            _buildListTile(Icons.privacy_tip, "Politique de confidentialité"),
+            _buildListTile(Icons.article, "Terms and conditions"),
+            _buildListTile(Icons.privacy_tip, "Confidentiality policy"),
             _buildListTile(Icons.more_horiz, "Lorem Ipsum"),
 
             SizedBox(height: 20),
-            
+
             Align(
               alignment: Alignment.centerLeft,
               child: OutlinedButton.icon(
@@ -84,8 +104,8 @@ class ParametersPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () => _logout(context),
-                icon: Icon(Icons.power_settings_new, size: 20), 
+                onPressed: _logout,
+                icon: Icon(Icons.power_settings_new, size: 20),
                 label: Text("Logout", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
               ),
             ),
@@ -93,7 +113,6 @@ class ParametersPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: NavBar(selectedIndex: 3, onItemTapped: (index) {
-        // Handle navigation here if needed
         return index;
       }),
     );
