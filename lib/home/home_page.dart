@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sportin/nav-bar/nav_bar.dart';
 import 'package:sportin/popups/add_session.dart';
 import 'package:sportin/popups/delete_session.dart';
 
@@ -18,6 +19,10 @@ class Home extends StatelessWidget {
       body: Center(
         child: DatePicker(),
       ),
+      bottomNavigationBar: NavBar(selectedIndex: 0, onItemTapped: (index) {
+        // Handle navigation here if needed
+        return index;
+      }),
     );
   }
 }
@@ -170,7 +175,7 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Supprimer des séances",
+                    "Delete workouts",
                     style: TextStyle(
                       color: const Color.fromARGB(170, 0, 0, 0),
                     ),
@@ -197,7 +202,7 @@ class _DatePickerState extends State<DatePicker> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "Ajouter une séance",
+                  "Add a workout",
                   style: TextStyle(
                     color: const Color.fromARGB(170, 0, 0, 0),
                   ),
@@ -207,9 +212,9 @@ class _DatePickerState extends State<DatePicker> {
           ),
         ],
       ),
-      Expanded(
-        child: filteredSessions.isEmpty
-            ? Center(child: Text("Aucune séance prévue"))
+      Expanded( Center(child: Text("Aucune séance prévue"))
+        child: filteredSessions!.isEmpty
+            ? Center(child: Text("No workout scheduled"))
             : ListView.builder(
                 itemCount: filteredSessions.length,
                 itemBuilder: (context, index) {

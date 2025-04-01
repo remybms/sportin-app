@@ -9,7 +9,7 @@ class DeleteSession extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Color.fromARGB(255, 167, 217, 146),
-      title: Text("Supprimer une séance"),
+      title: Text("Delete a workout"),
       content: SizedBox(
           width: double.maxFinite,
           height: 300,
@@ -37,7 +37,7 @@ class DeleteSession extends StatelessWidget {
             Navigator.of(context).pop();
           },
           child: Text(
-            "Annuler",
+            "Cancel",
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -46,7 +46,7 @@ class DeleteSession extends StatelessWidget {
             Navigator.of(context).pop();
           },
           child: Text(
-            "Supprimer",
+            "Delete",
             style: TextStyle(color: Colors.red),
           ),
         ),

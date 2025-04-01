@@ -3,13 +3,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sportin/create-program/create_program.dart';
 import 'package:sportin/home/home_page.dart';
 import 'package:sportin/login/login_page.dart';
+import 'package:sportin/parameters/parameters.dart';
 import 'package:sportin/signin/signin_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   runApp(MainApp());
 }
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
@@ -30,6 +30,8 @@ class MainApp extends StatelessWidget {
         '/signin': (context) => Signin(),
         '/login': (context) => Login(),
         '/create-program': (context) => CreateProgramPage(),
+        '/parameters': (context) => ParametersPage(),
+
       },
     );
   }
