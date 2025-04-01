@@ -21,7 +21,7 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
   @override
   void initState() {
     super.initState();
-    workoutOptions = List.generate(widget.workoutsPerWeek, (index) => "Séance ${index + 1}");
+    workoutOptions = List.generate(widget.workoutsPerWeek, (index) => "Workout ${index + 1}");
     if (workoutOptions.isNotEmpty) {
       _selectedWorkout = workoutOptions.first;
     }
