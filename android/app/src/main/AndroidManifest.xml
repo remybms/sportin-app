@@ -30,6 +30,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            <service
+    android:name="android.speech.RecognitionService"
+    android:permission="android.permission.BIND_SPEECH_RECOGNITION_SERVICE">
+    <intent-filter>
+        <action android:name="android.speech.RecognitionService" />
+    </intent-filter>
+</service>
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
@@ -39,7 +47,9 @@
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <action android:name="android.speech.RecognitionService" />
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 </manifest>
